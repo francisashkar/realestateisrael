@@ -1,0 +1,23 @@
+<form id="searchForm">
+    <input type="text" name="location" placeholder="Location">
+    <input type="number" name="min_price" placeholder="Min Price">
+    <input type="number" name="max_price" placeholder="Max Price">
+    <input type="text" name="property_type" placeholder="Property Type">
+    <input type="text" name="features" placeholder="Features (comma separated)">
+    <button type="submit">Search</button>
+</form>
+
+<script>
+document.getElementById('searchForm').addEventListener('submit', function(e) {
+    e.preventDefault();
+    const formData = new FormData(e.target);
+    const params = new URLSearchParams(formData).toString();
+
+    fetch(`/search?${params}`)
+        .then(response => response.json())
+        .then(data => {
+            console.log('Search Results:', data);  // Display results or update the UI
+        })
+        .catch(error => console.error('Error:', error));
+});
+</script>

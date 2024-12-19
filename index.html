@@ -1,0 +1,291 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Real Estate Properties</title>
+    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        /* General Page Styling */
+        body {
+            font-family: 'Roboto', sans-serif;
+            background: linear-gradient(to right, #e6f0ff, #cce0ff);
+            color: #333;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            flex-direction: column;
+            min-height: 100vh;
+        }
+        h1 {
+            font-weight: 700;
+            color: #2c3e50;
+            margin-top: 20px;
+            text-align: center;
+            background: -webkit-linear-gradient(#2980b9, #2ecc71);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            font-size: 2.5em;
+        }
+
+        /* Properties Grid */
+        .properties {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            width: 90%;
+            max-width: 1200px;
+            margin-top: 20px;
+        }
+
+        /* Property Card Styling */
+        .property-card {
+            background-color: #ffffff;
+            border-radius: 15px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+            padding: 20px;
+            text-align: center;
+            border: 1px solid #d0e2ff;
+            cursor: pointer;
+            position: relative;
+        }
+        .property-card:hover {
+            transform: translateY(-8px);
+            box-shadow: 0 12px 20px rgba(0, 0, 0, 0.15);
+            border-color: #b0d4ff;
+        }
+
+        /* Image Styling */
+        .property-image img {
+            width: 100%;
+            height: 200px;
+            object-fit: cover;
+            border-radius: 8px;
+            margin-bottom: 12px;
+            transition: opacity 0.3s;
+        }
+
+        /* Property Info */
+        .property-info h3 {
+            font-weight: 700;
+            color: #2c3e50;
+            margin: 0 0 8px;
+            font-size: 1.2em;
+        }
+        .property-info p {
+            font-size: 0.9em;
+            color: #666;
+            margin: 4px 0;
+        }
+
+        /* Property Features Icons */
+        .features {
+            display: flex;
+            justify-content: space-around;
+            margin-top: 10px;
+            font-size: 0.9em;
+            color: #666;
+        }
+        .feature {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        /* View Listing Button */
+        .view-button {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: background 0.3s;
+            margin-top: 10px;
+            text-decoration: none;
+            display: inline-block;
+        }
+
+        /* Year Selector Dropdown */
+        .year-selector {
+            margin-top: 10px;
+        }
+        .year-selector select {
+            padding: 5px 10px;
+            font-size: 0.9em;
+            border: 1px solid #ccc;
+            border-radius: 6px;
+            background-color: #f7f9fc;
+        }
+
+        /* Prediction Display */
+        .prediction-display {
+            font-size: 1em;
+            color: #27ae60;
+            font-weight: 600;
+            margin-top: 10px;
+            background-color: #e8f5e9;
+            padding: 10px;
+            border-radius: 8px;
+        }
+
+        /* Footer Styling */
+        .footer {
+            margin-top: 30px;
+            padding: 20px;
+            background-color: #2980b9;
+            color: #fff;
+            width: 100%;
+            text-align: center;
+            font-size: 0.9em;
+        }
+
+        /* Pagination Styling */
+        .pagination {
+            display: flex;
+            justify-content: center;
+            margin: 20px 0;
+            gap: 10px;
+        }
+        .pagination a {
+            padding: 10px 15px;
+            background-color: #3498db;
+            color: #fff;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: background-color 0.3s;
+        }
+        .pagination a:hover {
+            background-color: #2980b9;
+        }
+        .pagination .active {
+            background-color: #2ecc71;
+            pointer-events: none;
+        }
+    </style>
+</head>
+<body>
+    <h1>Real Estate Properties</h1>
+    <div class="properties">
+        {% for property in properties %}
+            <div class="property-card">
+                <div class="property-image">
+                    <img src="{{ property.image }}" alt="Property Image">
+                </div>
+                <div class="property-info">
+                    <h3>{{ property.address }}</h3>
+                    <p><strong>Price:</strong> {{ property.price }}</p>
+                    <div class="features">
+                        <div class="feature" title="Rooms">
+                            <i class="fas fa-bed"></i>
+                            {% if property.details is string %}
+                                {{ property.details.split(' ')[0] }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </div>
+                        <div class="feature" title="Floor">
+                            <i class="fas fa-layer-group"></i>
+                            {% if property.details is string and 'קומה' in property.details %}
+                                {{ property.details.split(' ')[3] }}
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </div>
+                        <div class="feature" title="Size">
+                            <i class="fas fa-ruler-combined"></i>
+                            {% if property.details is string and 'מ״ר' in property.details %}
+                                {{ property.details.split(' ')[-2] }} m²
+                            {% else %}
+                                N/A
+                            {% endif %}
+                        </div>
+                    </div>
+                    <a href="{{ property.url if property.url else '#' }}" target="_blank" class="view-button">View Listing</a>
+
+                    <!-- Year Selector and Prediction Display -->
+                    <div id="year-selector-{{ property._id }}" class="year-selector">
+                        <label for="years-{{ property._id }}">Predict for Years:</label>
+                        <select id="years-{{ property._id }}" onchange="fetchPrediction('{{ property._id }}', '{{ property.price }}')">
+                            <option value="0">0 years (Current Price)</option>
+                            {% for year in range(1, 11) %}
+                                <option value="{{ year }}">{{ year }} year{{ 's' if year > 1 else '' }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <p id="prediction-{{ property._id }}" class="prediction-display">Predicted Price: <span id="predicted-price-{{ property._id }}"></span> ₪</p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+
+    <!-- Pagination Controls -->
+    <div class="pagination">
+        {% if page > 1 %}
+            <a href="{{ url_for('index', page=page-1) }}">Previous</a>
+        {% endif %}
+
+        {% for p in range(1, total_pages + 1) %}
+            <a href="{{ url_for('index', page=p) }}" class="{{ 'active' if p == page else '' }}">{{ p }}</a>
+        {% endfor %}
+
+        {% if page < total_pages %}
+            <a href="{{ url_for('index', page=page+1) }}">Next</a>
+        {% endif %}
+    </div>
+
+    <div class="footer">
+        © 2024 Real Estate Properties | Designed with passion for your perfect home
+    </div>
+
+    <<script>
+    function displayCurrentPrice(propertyId, currentPrice) {
+        const sanitizedPrice = parseFloat(currentPrice.replace(/[^\d.]/g, ''));
+        document.getElementById(`predicted-price-${propertyId}`).textContent = sanitizedPrice.toLocaleString();
+    }
+
+    async function fetchPrediction(propertyId, currentPrice) {
+        const years = document.getElementById(`years-${propertyId}`).value;
+        const predictionElement = document.getElementById(`prediction-${propertyId}`);
+
+        // Display the current price if "0 years" is selected
+        if (years === "0") {
+            displayCurrentPrice(propertyId, currentPrice);
+            return;
+        }
+
+        currentPrice = parseFloat(currentPrice.replace(/[^\d.]/g, ''));
+        try {
+            const response = await fetch('/predict_price', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ current_price: currentPrice, years: parseInt(years) })
+            });
+
+            if (!response.ok) {
+                console.error("Prediction request failed:", response.statusText);
+                return;
+            }
+
+            const data = await response.json();
+            document.getElementById(`predicted-price-${propertyId}`).textContent = data.predicted_price.toLocaleString();
+            predictionElement.style.display = "block";
+        } catch (error) {
+            console.error("Error fetching prediction:", error);
+        }
+    }
+
+    // Display the initial current price by default
+    document.addEventListener("DOMContentLoaded", () => {
+        {% for property in properties %}
+            displayCurrentPrice("{{ property._id }}", "{{ property.price }}");
+        {% endfor %}
+    });
+</script>
+</body>
+</html>
